@@ -22,11 +22,8 @@ rm -rf node_modules package-lock.json
 echo "📦 安装依赖..."
 npm install
 
-# 安装主题（如果还没有安装）
-if [ ! -d "themes/butterfly" ]; then
-    echo "🦋 安装 Butterfly 主题..."
-    git clone https://github.com/jerryc127/hexo-theme-butterfly.git themes/butterfly
-fi
+# Butterfly 主题已通过 npm 安装，无需手动下载
+echo "✅ Butterfly 主题已通过 npm 安装"
 
 # 清理并生成
 echo "🧹 清理缓存..."
