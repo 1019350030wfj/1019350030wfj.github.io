@@ -70,6 +70,10 @@ pretty_urls:
   trailing_index: true
   trailing_html: true
 
+# Asset optimization
+asset_pipeline:
+  enable: false
+
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/

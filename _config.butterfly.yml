@@ -95,3 +95,6 @@ lazyload:
   field: site
   placeholder: /img/bg.png
   errorimg: /img/bg.png
+
+# CSS 版本控制
+css_version: false
