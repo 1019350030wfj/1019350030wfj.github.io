@@ -22,8 +22,10 @@ rm -rf node_modules package-lock.json
 echo "📦 安装依赖..."
 npm install
 
-# Butterfly 主题已通过 npm 安装，无需手动下载
-echo "✅ Butterfly 主题已通过 npm 安装"
+# 设置 Butterfly 主题符号链接
+mkdir -p themes
+ln -sf ../node_modules/hexo-theme-butterfly themes/butterfly
+echo "✅ Butterfly 主题已设置完成"
 
 # 清理并生成
 echo "🧹 清理缓存..."

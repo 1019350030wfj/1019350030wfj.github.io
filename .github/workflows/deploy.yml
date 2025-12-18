@@ -28,6 +28,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+      
+      - name: Setup theme symlink
+        run: |
+          mkdir -p themes
+          ln -sf ../node_modules/hexo-theme-butterfly themes/butterfly
 
       - name: Build
         run: |
