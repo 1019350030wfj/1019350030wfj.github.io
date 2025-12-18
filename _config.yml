@@ -10,8 +10,8 @@ description: 坚持 习惯 反思 总结 效率
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 #url: http://yoursite.com/child
 #root: /child/
-#permalink: :year/:month/:day/:title/
-#permalink_defaults:
+permalink: :year/:month/:day/:title.html
+permalink_defaults:
 
 # Directory
 source_dir: source
@@ -64,6 +64,11 @@ time_format: HH:mm:ss
 ## Set per_page to 0 to disable pagination
 per_page: 10
 pagination_dir: page
+
+# HTML generation
+pretty_urls:
+  trailing_index: true
+  trailing_html: true
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/

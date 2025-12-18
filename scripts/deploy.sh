@@ -19,6 +19,9 @@ npm run clean
 echo "🏗️  生成静态文件..."
 npm run build
 
+echo "🔧 修复 URL 访问问题..."
+./scripts/fix-urls.sh
+
 echo "🚀 部署到 GitHub Pages..."
 npm run deploy
 

@@ -90,3 +90,9 @@ lazyload:
   field: site
   placeholder: /img/loading.gif
   errorimg: /img/error.png
+
+# URL 设置
+url:
+  url: https://1019350030wfj.github.io
+  root: /
+  permalink: :year/:month/:day/:title.html
