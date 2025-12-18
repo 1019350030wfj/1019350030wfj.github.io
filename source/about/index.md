@@ -42,7 +42,7 @@ layout: about
 ## 联系方式
 
 - GitHub: [1019350030wfj](https://github.com/1019350030wfj)
-- Email: your-email@example.com
+- Email: 1019350030@qq.com
 
 ## 博客定位
 
