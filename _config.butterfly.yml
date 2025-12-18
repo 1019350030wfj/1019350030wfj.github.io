@@ -8,7 +8,7 @@ menu:
   归档: /archives/ || fas fa-archive
   标签: /tags/ || fas fa-tags
   分类: /categories/ || fas fa-folder-open
-  关于|about: /about/ || fas fa-heart
+  关于: /about/ || fas fa-heart
 
 # 代碼主題
 highlight_theme: mac light
@@ -17,6 +17,11 @@ highlight_theme: mac light
 social:
   fab fa-github: https://github.com/1019350030wfj || Github
   fas fa-envelope: mailto:your-email@example.com || Email
+
+# 头像
+avatar:
+  img: /img/avatar.png
+  effect: false
 
 # 文章設置
 toc:
@@ -88,11 +93,5 @@ font:
 lazyload:
   enable: true
   field: site
-  placeholder: /img/loading.gif
-  errorimg: /img/error.png
-
-# URL 设置
-url:
-  url: https://1019350030wfj.github.io
-  root: /
-  permalink: :year/:month/:day/:title.html
+  placeholder: /img/bg.png
+  errorimg: /img/bg.png
