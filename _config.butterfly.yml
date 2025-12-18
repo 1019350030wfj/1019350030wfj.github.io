@@ -98,3 +98,9 @@ lazyload:
 
 # CSS 版本控制
 css_version: false
+
+# 禁用主题版本号
+version: false
+
+# 静态资源配置
+static_css: true

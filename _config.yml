@@ -74,6 +74,9 @@ pretty_urls:
 asset_pipeline:
   enable: false
 
+# Asset versioning
+asset_version: false
+
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
