@@ -1,0 +1,72 @@
+# Fluid 主题配置
+# 更多配置请参考: https://fluid.dev/docs/guide/
+# 导航菜单
+menu:
+  - { path: /, icon: fa fa-home, text: 首页 }
+  - { path: /archives/, icon: fa fa-archive, text: 归档 }
+  - { path: /tags/, icon: fa fa-tags, text: 标签 }
+  - { path: /categories/, icon: fa fa-folder-open, text: 分类 }
+  - { path: /about/, icon: fa fa-info, text: 关于 }
+
+# 头像
+avatar:
+  # 替换为你的头像路径
+  img: /img/avatar.png
+  # 开启头像动画
+  animated: true
+  # 头像圆角大小
+  rounded: true
+
+# 横幅
+banner:
+  # 替换为你的横幅图片路径
+  img: /img/bg.png
+  # 横幅高度
+  height: 300
+  # 横幅文字
+  title: "坚持 习惯 反思 总结 效率"
+  
+# 页脚
+footer:
+  # 页脚统计信息
+  # 不显示统计信息
+  statistics: false
+  # 博客起始年份
+  since: 2016
+  # 自定义页脚信息
+  custom: '<a href="https://hexo.io/" target="_blank">Hexo</a> | <a href="https://fluid.dev/" target="_blank">Fluid</a>'
+
+# 代码高亮
+highlight:
+  # 代码高亮主题
+  theme: tomorrow
+  # 代码块复制
+  copyBtn: true
+  # 代码块展开/折叠
+  expand: true
+
+# 评论
+comments:
+  # 评论系统，这里可以配置 valine, gitalk, giscus 等
+  enable: false
+  
+# 文章设置
+post:
+  # 文章顶部大图
+  img_align: center
+  # 文章目录
+  toc: true
+  # 版权声明
+  copyright: false
+
+# 懒加载
+lazyload:
+  enable: true
+  placeholder: /img/bg.png
+  
+# 其他设置
+# 是否在移动端显示目录
+toc:
+  enable: true
+  # 移动端显示目录按钮
+  mobile: false
