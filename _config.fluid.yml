@@ -11,7 +11,7 @@ menu:
 # 头像
 avatar:
   # 替换为你的头像路径
-  img: /img/avatar.png
+  img: /img/avatar.jpeg
   # 开启头像动画
   animated: true
   # 头像圆角大小
