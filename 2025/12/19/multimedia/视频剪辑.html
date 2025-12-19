@@ -1,0 +1,681 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jayden">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景 &amp; 问题在移动端视频应用开发中，功能规划和技术实现往往面临以下挑战：  功能分散：各种剪辑功能缺乏统一的架构设计 代码复用性低：相似功能重复实现，维护成本高 性能瓶颈：视频处理算法实现不当导致卡顿 开发效率低：缺乏标准化的开发流程和工具链  本文基于实际项目经验，提供一套完整的视频剪辑应用开发指南。 结论先行（TL;DR）视频剪辑应用的核心是管道化处理架构 + 模块化功能设计。通过合">
+<meta property="og:type" content="article">
+<meta property="og:title" content="视频剪辑开发实战：从功能列表到完整应用">
+<meta property="og:url" content="https://1019350030wfj.github.io/2025/12/19/multimedia/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91.html">
+<meta property="og:site_name" content="Jayden 技术博客">
+<meta property="og:description" content="背景 &amp; 问题在移动端视频应用开发中，功能规划和技术实现往往面临以下挑战：  功能分散：各种剪辑功能缺乏统一的架构设计 代码复用性低：相似功能重复实现，维护成本高 性能瓶颈：视频处理算法实现不当导致卡顿 开发效率低：缺乏标准化的开发流程和工具链  本文基于实际项目经验，提供一套完整的视频剪辑应用开发指南。 结论先行（TL;DR）视频剪辑应用的核心是管道化处理架构 + 模块化功能设计。通过合">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://1019350030wfj.github.io/2025/12/19/multimedia/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/%E9%AB%98%E7%BA%A7%E5%89%AA%E8%BE%91.png">
+<meta property="og:image" content="https://1019350030wfj.github.io/2025/12/19/multimedia/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/%E9%AB%98%E7%BA%A7%E7%BE%8E%E5%AE%B9.png">
+<meta property="og:image" content="https://1019350030wfj.github.io/2025/12/19/multimedia/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/%E5%9F%BA%E7%A1%80%E5%89%AA%E8%BE%91.png">
+<meta property="og:image" content="https://1019350030wfj.github.io/2025/12/19/multimedia/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/%E5%9F%BA%E7%A1%80%E7%BE%8E%E5%AE%B9.png">
+<meta property="article:published_time" content="2025-12-18T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-19T09:18:49.422Z">
+<meta property="article:author" content="Jayden">
+<meta property="article:tag" content="视频剪辑">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="OpenGL ES">
+<meta property="article:tag" content="FFmpeg">
+<meta property="article:tag" content="多媒体处理">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://1019350030wfj.github.io/2025/12/19/multimedia/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/%E9%AB%98%E7%BA%A7%E5%89%AA%E8%BE%91.png">
+  
+  
+  
+  <title>视频剪辑开发实战：从功能列表到完整应用 - Jayden 技术博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"1019350030wfj.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":true,"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2,"placeholder":"/img/bg.png"},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Jayden 技术博客" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="视频剪辑开发实战：从功能列表到完整应用"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-12-19 00:00" pubdate>
+          2025年12月19日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">视频剪辑开发实战：从功能列表到完整应用</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="背景-问题"><a href="#背景-问题" class="headerlink" title="背景 &amp; 问题"></a>背景 &amp; 问题</h2><p>在移动端视频应用开发中，功能规划和技术实现往往面临以下挑战：</p>
+<ul>
+<li><strong>功能分散</strong>：各种剪辑功能缺乏统一的架构设计</li>
+<li><strong>代码复用性低</strong>：相似功能重复实现，维护成本高</li>
+<li><strong>性能瓶颈</strong>：视频处理算法实现不当导致卡顿</li>
+<li><strong>开发效率低</strong>：缺乏标准化的开发流程和工具链</li>
+</ul>
+<p>本文基于实际项目经验，提供一套完整的视频剪辑应用开发指南。</p>
+<h2 id="结论先行（TL-DR）"><a href="#结论先行（TL-DR）" class="headerlink" title="结论先行（TL;DR）"></a>结论先行（TL;DR）</h2><p>视频剪辑应用的核心是<strong>管道化处理架构 + 模块化功能设计</strong>。通过合理的设计模式和现代技术栈，可以实现高性能、易维护的视频处理应用。</p>
+<p>关键要点：</p>
+<ul>
+<li>🎯 <strong>架构选择</strong>：Command&#x2F;Handler 模式 + Pipeline 架构</li>
+<li>🚀 <strong>技术栈</strong>：FFmpeg + OpenGL ES + Camera2D API</li>
+<li>📱 <strong>性能优化</strong>：异步处理 + 内存池 + 硬件加速</li>
+<li>🛠️ <strong>代码质量</strong>：模块化 + 单元测试 + 依赖注入</li>
+</ul>
+<h2 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h2><h3 id="视频处理管道架构"><a href="#视频处理管道架构" class="headerlink" title="视频处理管道架构"></a>视频处理管道架构</h3><p>现代视频剪辑应用的核心是<strong>处理管道（Pipeline）</strong>，每个处理阶段都是独立的处理器：</p>
+<pre class="line-numbers language- mermaid"><code class="language- mermaid">graph LR
+    A[视频源] --> B[解码器]
+    B --> C[预处理]
+    C --> D[基础编辑]
+    D --> E[特效处理]
+    E --> F[高级编辑]
+    F --> G[编码器]
+    G --> H[输出]
+<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+
+<h4 id="关键组件设计"><a href="#关键组件设计" class="headerlink" title="关键组件设计"></a>关键组件设计</h4><ol>
+<li><p><strong>MediaExtractor（媒体提取器）</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">MediaExtractor</span> &#123;<br>    VideoFrame <span class="hljs-title function_">extractFrame</span><span class="hljs-params">(String videoPath, <span class="hljs-type">long</span> timeUs)</span>;<br>    AudioTrack <span class="hljs-title function_">extractAudio</span><span class="hljs-params">(String videoPath)</span>;<br>    MediaMetadata <span class="hljs-title function_">extractMetadata</span><span class="hljs-params">(String videoPath)</span>;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FFmpegMediaExtractor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">MediaExtractor</span> &#123;<br>    <span class="hljs-keyword">private</span> FFmpeg ffmpeg;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> VideoFrame <span class="hljs-title function_">extractFrame</span><span class="hljs-params">(String videoPath, <span class="hljs-type">long</span> timeUs)</span> &#123;<br>        <span class="hljs-comment">// 使用 FFmpeg 提取指定时间的视频帧</span><br>        <span class="hljs-keyword">return</span> ffmpeg.extractFrame(videoPath, timeUs);<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> AudioTrack <span class="hljs-title function_">extractAudio</span><span class="hljs-params">(String videoPath)</span> &#123;<br>        <span class="hljs-comment">// 提取音频轨道</span><br>        <span class="hljs-keyword">return</span> ffmpeg.extractAudio(videoPath);<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> MediaMetadata <span class="hljs-title function_">extractMetadata</span><span class="hljs-params">(String videoPath)</span> &#123;<br>        <span class="hljs-comment">// 提取视频元信息</span><br>        <span class="hljs-keyword"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">MediaExtractor</span> &#123;<br>    VideoFrame <span class="hljs-title function_">extractFrame</span><span class="hljs-params">(String videoPath, <span class="hljs-type">long</span> timeUs)</span>;<br>    AudioTrack <span class="hljs-title function_">extractAudio</span><span class="hljs-params">(String videoPath)</span>;<br>    MediaMetadata <span class="hljs-title function_">extractMetadata</span><span class="hljs-params">(String videoPath)</span>;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FFmpegMediaExtractor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">MediaExtractor</span> &#123;<br>    <span class="hljs-keyword">private</span> FFmpeg ffmpeg;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> VideoFrame <span class="hljs-title function_">extractFrame</span><span class="hljs-params">(String videoPath, <span class="hljs-type">long</span> timeUs)</span> &#123;<br>        <span class="hljs-comment">// 使用 FFmpeg 提取指定时间的视频帧</span><br>        <span class="hljs-keyword">return</span> ffmpeg.extractFrame(videoPath, timeUs);<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> AudioTrack <span class="hljs-title function_">extractAudio</span><span class="hljs-params">(String videoPath)</span> &#123;<br>        <span class="hljs-comment">// 提取音频轨道</span><br>        <span class="hljs-keyword">return</span> ffmpeg.extractAudio(videoPath);<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> MediaMetadata <span class="hljs-title function_">extractMetadata</span><span class="hljs-params">(String videoPath)</span> &#123;<br>        <span class="hljs-comment">// 提取视频元信息</span><br>        <span class="hljs-keyword">return</span> ffmpeg.getMetadata(videoPath);<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>VideoProcessor（视频处理器）</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">VideoProcessor</span> &#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyFilter</span><span class="hljs-params">(VideoFrame frame, Filter filter)</span>;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyTransition</span><span class="hljs-params">(VideoFrame from, VideoFrame to, Transition transition)</span>;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">adjustSpeed</span><span class="hljs-params">(MediaTrack track, <span class="hljs-type">float</span> speed)</span>;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyEffect</span><span class="hljs-params">(VideoFrame frame, Effect effect)</span>;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OpenGLVideoProcessor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">VideoProcessor</span> &#123;<br>    <span class="hljs-keyword">private</span> EGLContext eglContext;<br>    <span class="hljs-keyword">private</span> ShaderProgram shaderProgram;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyFilter</span><span class="hljs-params">(VideoFrame frame, Filter filter)</span> &#123;<br>        <span class="hljs-keyword">switch</span> (filter.getType()) &#123;<br>            <span class="hljs-keyword">case</span> COLOR_GRADIENT:<br>                applyColorGradient(frame, (ColorGradientFilter) filter);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> GAUSSIAN_BLUR:<br>                applyGaussianBlur(frame, (GaussianBlurFilter) filter);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-comment">// ... 其他滤镜实现</span><br>        &#125;<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyColorGradient</span><span class="hljs-params">(VideoFrame frame, ColorGradientFilter filter)</span> &#123;<br>        <span class="hljs-comment"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">VideoProcessor</span> &#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyFilter</span><span class="hljs-params">(VideoFrame frame, Filter filter)</span>;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyTransition</span><span class="hljs-params">(VideoFrame from, VideoFrame to, Transition transition)</span>;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">adjustSpeed</span><span class="hljs-params">(MediaTrack track, <span class="hljs-type">float</span> speed)</span>;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyEffect</span><span class="hljs-params">(VideoFrame frame, Effect effect)</span>;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OpenGLVideoProcessor</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">VideoProcessor</span> &#123;<br>    <span class="hljs-keyword">private</span> EGLContext eglContext;<br>    <span class="hljs-keyword">private</span> ShaderProgram shaderProgram;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyFilter</span><span class="hljs-params">(VideoFrame frame, Filter filter)</span> &#123;<br>        <span class="hljs-keyword">switch</span> (filter.getType()) &#123;<br>            <span class="hljs-keyword">case</span> COLOR_GRADIENT:<br>                applyColorGradient(frame, (ColorGradientFilter) filter);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> GAUSSIAN_BLUR:<br>                applyGaussianBlur(frame, (GaussianBlurFilter) filter);<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-comment">// ... 其他滤镜实现</span><br>        &#125;<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyColorGradient</span><span class="hljs-params">(VideoFrame frame, ColorGradientFilter filter)</span> &#123;<br>        <span class="hljs-comment">// 使用 OpenGL ES 着色器实现渐变效果</span><br>        bindShader(filter.getShaderSource());<br>        renderFrameWithFilter(frame, filter.getParameters());<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>EffectComposer（特效合成器）</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">EffectComposer</span> &#123;<br>    <span class="hljs-keyword">public</span> Composition <span class="hljs-title function_">compose</span><span class="hljs-params">(List&lt;MediaTrack&gt; tracks, CompositionSettings settings)</span> &#123;<br>        <span class="hljs-type">Timeline</span> <span class="hljs-variable">timeline</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Timeline</span>();<br>        <br>        <span class="hljs-comment">// 添加视频轨道</span><br>        <span class="hljs-keyword">for</span> (MediaTrack track : tracks) &#123;<br>            timeline.addTrack(track);<br>        &#125;<br>        <br>        <span class="hljs-comment">// 添加转场效果</span><br>        <span class="hljs-keyword">if</span> (settings.hasTransitions()) &#123;<br>            addTransitions(timeline, settings.getTransitions());<br>        &#125;<br>        <br>        <span class="hljs-comment">// 添加叠加层</span><br>        <span class="hljs-keyword">if</span> (settings.hasOverlays()) &#123;<br>            addOverlays(timeline, settings.getOverlays());<br>        &#125;<br>        <br>        <span class="hljs-keyword"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">EffectComposer</span> &#123;<br>    <span class="hljs-keyword">public</span> Composition <span class="hljs-title function_">compose</span><span class="hljs-params">(List&lt;MediaTrack&gt; tracks, CompositionSettings settings)</span> &#123;<br>        <span class="hljs-type">Timeline</span> <span class="hljs-variable">timeline</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Timeline</span>();<br>        <br>        <span class="hljs-comment">// 添加视频轨道</span><br>        <span class="hljs-keyword">for</span> (MediaTrack track : tracks) &#123;<br>            timeline.addTrack(track);<br>        &#125;<br>        <br>        <span class="hljs-comment">// 添加转场效果</span><br>        <span class="hljs-keyword">if</span> (settings.hasTransitions()) &#123;<br>            addTransitions(timeline, settings.getTransitions());<br>        &#125;<br>        <br>        <span class="hljs-comment">// 添加叠加层</span><br>        <span class="hljs-keyword">if</span> (settings.hasOverlays()) &#123;<br>            addOverlays(timeline, settings.getOverlays());<br>        &#125;<br>        <br>        <span class="hljs-keyword">return</span> timeline.render();<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+</li>
+<li><p><strong>MediaEncoder（媒体编码器）</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">H264Encoder</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">MediaEncoder</span> &#123;<br>    <span class="hljs-keyword">private</span> MediaCodec mediaCodec;<br>    <span class="hljs-keyword">private</span> MediaFormat mediaFormat;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">encodeVideo</span><span class="hljs-params">(VideoFrame[] frames, String outputPath)</span> &#123;<br>        <span class="hljs-type">MediaFormat</span> <span class="hljs-variable">format</span> <span class="hljs-operator">=</span> MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, <br>                videoWidth, videoHeight, frameRate, <span class="hljs-literal">null</span>);<br>        mediaCodec = MediaCodec.createEncoderByType(format, <span class="hljs-literal">null</span>);<br>        <br>        mediaCodec.configure(format, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);<br>        <br>        <span class="hljs-keyword">try</span> (<span class="hljs-type">FileOutputStream</span> <span class="hljs-variable">fos</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileOutputStream</span>(outputPath)) &#123;<br>            <span class="hljs-keyword">for</span> (VideoFrame frame : frames) &#123;<br>                mediaCodec.queueInputBuffer(frame.getBuffer());<br>                <span class="hljs-type">ByteBuffer</span> <span class="hljs-variable">outputBuffer</span> <span class="hljs-operator">=</span> mediaCodec.getOutputBuffer();<br>                <br>                <span class="hljs-keyword">while</span> (mediaCodec.dequeueOutputBuffer(outputBuffer, <span class="hljs-literal">true</span>) &gt;= <span class="hljs-number">0</span>) &#123;<br>                    fos.write(outputBuffer.array());<br>                &#125;<br>            &#125;<br>        &#125; <span class="hljs-keyword"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">H264Encoder</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">MediaEncoder</span> &#123;<br>    <span class="hljs-keyword">private</span> MediaCodec mediaCodec;<br>    <span class="hljs-keyword">private</span> MediaFormat mediaFormat;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">encodeVideo</span><span class="hljs-params">(VideoFrame[] frames, String outputPath)</span> &#123;<br>        <span class="hljs-type">MediaFormat</span> <span class="hljs-variable">format</span> <span class="hljs-operator">=</span> MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, <br>                videoWidth, videoHeight, frameRate, <span class="hljs-literal">null</span>);<br>        mediaCodec = MediaCodec.createEncoderByType(format, <span class="hljs-literal">null</span>);<br>        <br>        mediaCodec.configure(format, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>);<br>        <br>        <span class="hljs-keyword">try</span> (<span class="hljs-type">FileOutputStream</span> <span class="hljs-variable">fos</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FileOutputStream</span>(outputPath)) &#123;<br>            <span class="hljs-keyword">for</span> (VideoFrame frame : frames) &#123;<br>                mediaCodec.queueInputBuffer(frame.getBuffer());<br>                <span class="hljs-type">ByteBuffer</span> <span class="hljs-variable">outputBuffer</span> <span class="hljs-operator">=</span> mediaCodec.getOutputBuffer();<br>                <br>                <span class="hljs-keyword">while</span> (mediaCodec.dequeueOutputBuffer(outputBuffer, <span class="hljs-literal">true</span>) &gt;= <span class="hljs-number">0</span>) &#123;<br>                    fos.write(outputBuffer.array());<br>                &#125;<br>            &#125;<br>        &#125; <span class="hljs-keyword">finally</span> &#123;<br>            mediaCodec.stop();<br>            mediaCodec.release();<br>        &#125;<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="实现方案"><a href="#实现方案" class="headerlink" title="实现方案"></a>实现方案</h2><h3 id="1-项目架构设计"><a href="#1-项目架构设计" class="headerlink" title="1. 项目架构设计"></a>1. 项目架构设计</h3><h4 id="整体架构"><a href="#整体架构" class="headerlink" title="整体架构"></a>整体架构</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">VideoEditorApplication</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Application</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onCreate</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-built_in">super</span>.onCreate();<br>        initializeDI();<br>        initVideoProcessingPipeline();<br>        initUI();<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initializeDI</span><span class="hljs-params">()</span> &#123;<br>        DaggerApplicationComponent.builder()<br>            .application(<span class="hljs-built_in">this</span>)<br>            .build()<br>            .inject(<span class="hljs-built_in">this</span>);<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initVideoProcessingPipeline</span><span class="hljs-params"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">VideoEditorApplication</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Application</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onCreate</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-built_in">super</span>.onCreate();<br>        initializeDI();<br>        initVideoProcessingPipeline();<br>        initUI();<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initializeDI</span><span class="hljs-params">()</span> &#123;<br>        DaggerApplicationComponent.builder()<br>            .application(<span class="hljs-built_in">this</span>)<br>            .build()<br>            .inject(<span class="hljs-built_in">this</span>);<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initVideoProcessingPipeline</span><span class="hljs-params">()</span> &#123;<br>        videoProcessingPipeline = videoEditorComponent.getVideoProcessingPipeline();<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h4 id="依赖注入配置"><a href="#依赖注入配置" class="headerlink" title="依赖注入配置"></a>依赖注入配置</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-meta">@Module</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">VideoProcessingModule</span> &#123;<br>    <span class="hljs-meta">@Provides</span><br>    <span class="hljs-meta">@Singleton</span><br>    <span class="hljs-keyword">public</span> MediaExtractor <span class="hljs-title function_">provideMediaExtractor</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FFmpegMediaExtractor</span>();<br>    &#125;<br>    <br>    <span class="hljs-meta">@Provides</span><br>    <span class="hljs-meta">@Singleton</span><br>    <span class="hljs-keyword">public</span> VideoProcessor <span class="hljs-title function_">provideVideoProcessor</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">OpenGLVideoProcessor</span>();<br>    &#125;<br>    <br>    <span class="hljs-meta">@Provides</span><br>    <span class="hljs-meta">@Singleton</span><br>    <span class="hljs-keyword">public</span> EffectComposer <span class="hljs-title function_">provideEffectComposer</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">EffectComposer</span>();<br>    &#125;<br>    <br>    <span class="hljs-meta">@Provides</span><br>    <span class="hljs-meta">@Singleton</span><br>    <span class="hljs-keyword">public</span> MediaEncoder <span class="hljs-title function_">provideMediaEncoder</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_"><code class="language-hljs java"><span class="hljs-meta">@Module</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">VideoProcessingModule</span> &#123;<br>    <span class="hljs-meta">@Provides</span><br>    <span class="hljs-meta">@Singleton</span><br>    <span class="hljs-keyword">public</span> MediaExtractor <span class="hljs-title function_">provideMediaExtractor</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FFmpegMediaExtractor</span>();<br>    &#125;<br>    <br>    <span class="hljs-meta">@Provides</span><br>    <span class="hljs-meta">@Singleton</span><br>    <span class="hljs-keyword">public</span> VideoProcessor <span class="hljs-title function_">provideVideoProcessor</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">OpenGLVideoProcessor</span>();<br>    &#125;<br>    <br>    <span class="hljs-meta">@Provides</span><br>    <span class="hljs-meta">@Singleton</span><br>    <span class="hljs-keyword">public</span> EffectComposer <span class="hljs-title function_">provideEffectComposer</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">EffectComposer</span>();<br>    &#125;<br>    <br>    <span class="hljs-meta">@Provides</span><br>    <span class="hljs-meta">@Singleton</span><br>    <span class="hljs-keyword">public</span> MediaEncoder <span class="hljs-title function_">provideMediaEncoder</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">H264Encoder</span>();<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h3 id="2-核心功能实现"><a href="#2-核心功能实现" class="headerlink" title="2. 核心功能实现"></a>2. 核心功能实现</h3><h4 id="高级剪辑功能"><a href="#高级剪辑功能" class="headerlink" title="高级剪辑功能"></a>高级剪辑功能</h4><p><img src="/2025/12/19/multimedia/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/%E9%AB%98%E7%BA%A7%E5%89%AA%E8%BE%91.png" srcset="/img/loading.gif" lazyload alt="高级剪辑"></p>
+<p><strong>多轨道时间轴编辑</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TimelineEditor</span> &#123;<br>    <span class="hljs-keyword">private</span> List&lt;VideoTrack&gt; tracks = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    <span class="hljs-keyword">private</span> Timeline timeline;<br>    <span class="hljs-keyword">private</span> Selection selection;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addVideoTrack</span><span class="hljs-params">(String videoPath)</span> &#123;<br>        <span class="hljs-type">MediaExtractor</span> <span class="hljs-variable">extractor</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FFmpegMediaExtractor</span>();<br>        <span class="hljs-type">MediaTrack</span> <span class="hljs-variable">track</span> <span class="hljs-operator">=</span> extractor.extractVideoTrack(videoPath);<br>        tracks.add(track);<br>        timeline.addTrack(track);<br>        notifyTimelineChanged();<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">splitTrackAt</span><span class="hljs-params">(VideoTrack track, <span class="hljs-type">long</span> timeUs)</span> &#123;<br>        <span class="hljs-type">VideoTrack</span> <span class="hljs-variable">newTrack</span> <span class="hljs-operator">=</span> track.splitAt(timeUs);<br>        tracks.add(tracks.indexOf(track), newTrack);<br>        timeline.addTrack(newTrack);<br>        notifyTimelineChanged();<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyTransition</span><span class="hljs-params">(Transition transition)</span> &#123;<br>        <span class="hljs-keyword">if</span> (selection.getDuration() &gt; transition.getDuration()) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;Transition longer than selection&quot;</span>);<br>        &#125;<br>        <br>        <span class="hljs-comment"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TimelineEditor</span> &#123;<br>    <span class="hljs-keyword">private</span> List&lt;VideoTrack&gt; tracks = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    <span class="hljs-keyword">private</span> Timeline timeline;<br>    <span class="hljs-keyword">private</span> Selection selection;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addVideoTrack</span><span class="hljs-params">(String videoPath)</span> &#123;<br>        <span class="hljs-type">MediaExtractor</span> <span class="hljs-variable">extractor</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">FFmpegMediaExtractor</span>();<br>        <span class="hljs-type">MediaTrack</span> <span class="hljs-variable">track</span> <span class="hljs-operator">=</span> extractor.extractVideoTrack(videoPath);<br>        tracks.add(track);<br>        timeline.addTrack(track);<br>        notifyTimelineChanged();<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">splitTrackAt</span><span class="hljs-params">(VideoTrack track, <span class="hljs-type">long</span> timeUs)</span> &#123;<br>        <span class="hljs-type">VideoTrack</span> <span class="hljs-variable">newTrack</span> <span class="hljs-operator">=</span> track.splitAt(timeUs);<br>        tracks.add(tracks.indexOf(track), newTrack);<br>        timeline.addTrack(newTrack);<br>        notifyTimelineChanged();<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyTransition</span><span class="hljs-params">(Transition transition)</span> &#123;<br>        <span class="hljs-keyword">if</span> (selection.getDuration() &gt; transition.getDuration()) &#123;<br>            <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">&quot;Transition longer than selection&quot;</span>);<br>        &#125;<br>        <br>        <span class="hljs-comment">// 自动处理与转场适配的时间轴</span><br>        selection.applyTransition(transition);<br>        notifyTimelineChanged();<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<p><img src="/2025/12/19/multimedia/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/%E9%AB%98%E7%BA%A7%E7%BE%8E%E5%AE%B9.png" srcset="/img/loading.gif" lazyload alt="高级美容"></p>
+<p><strong>高级美容功能</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BeautyFilterProcessor</span> &#123;<br>    <span class="hljs-keyword">private</span> GPUImageProcessor gpuProcessor;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyBeautyEffects</span><span class="hljs-params">(VideoFrame frame, BeautySettings settings)</span> &#123;<br>        <span class="hljs-comment">// 美白算法</span><br>        <span class="hljs-type">VideoFrame</span> <span class="hljs-variable">whitened</span> <span class="hljs-operator">=</span> applySkinWhitening(frame, settings.getWhiteningLevel());<br>        <br>        <span class="hljs-comment">// 磨皮平滑</span><br>        <span class="hljs-type">VideoFrame</span> <span class="hljs-variable">smoothed</span> <span class="hljs-operator">=</span> applySkinSmoothing(whitened, settings.getSmoothingLevel());<br>        <br>        <span class="hljs-comment">// 大眼效果</span><br>        <span class="hljs-type">VideoFrame</span> <span class="hljs-variable">enlarged</span> <span class="hljs-operator">=</span> applyEyeEnlargement(smoothed, settings.getEyeEnlargementLevel());<br>        <br>        <span class="hljs-comment">// 瘦脸效果</span><br>        <span class="hljs-type">VideoFrame</span> <span class="hljs-variable">thinned</span> <span class="hljs-operator">=</span> applyFaceThinning(enlarged, settings.getThinningLevel());<br>        <br>        gpuProcessor.processFrame(thinned);<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> VideoFrame <span class="hljs-title function_">applySkinWhitening</span><span class="hljs-params">(VideoFrame frame, <span class="hljs-type">float</span> level)</span> &#123;<br>        <span class="hljs-comment">// 基于 YUV 颜色空间的皮肤检测和美白算法</span><br>        <span class="hljs-type">YUVFrame</span> <span class="hljs-variable">yuvFrame</span> <span class="hljs-operator">=</span> convertToYUV(frame);<br>        <span class="hljs-type">byte</span>[] whitened = yuvFrame.clone();<br>        applyWhiteningAlgorithm(whitened, level);<br>        <span class="hljs-keyword"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BeautyFilterProcessor</span> &#123;<br>    <span class="hljs-keyword">private</span> GPUImageProcessor gpuProcessor;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyBeautyEffects</span><span class="hljs-params">(VideoFrame frame, BeautySettings settings)</span> &#123;<br>        <span class="hljs-comment">// 美白算法</span><br>        <span class="hljs-type">VideoFrame</span> <span class="hljs-variable">whitened</span> <span class="hljs-operator">=</span> applySkinWhitening(frame, settings.getWhiteningLevel());<br>        <br>        <span class="hljs-comment">// 磨皮平滑</span><br>        <span class="hljs-type">VideoFrame</span> <span class="hljs-variable">smoothed</span> <span class="hljs-operator">=</span> applySkinSmoothing(whitened, settings.getSmoothingLevel());<br>        <br>        <span class="hljs-comment">// 大眼效果</span><br>        <span class="hljs-type">VideoFrame</span> <span class="hljs-variable">enlarged</span> <span class="hljs-operator">=</span> applyEyeEnlargement(smoothed, settings.getEyeEnlargementLevel());<br>        <br>        <span class="hljs-comment">// 瘦脸效果</span><br>        <span class="hljs-type">VideoFrame</span> <span class="hljs-variable">thinned</span> <span class="hljs-operator">=</span> applyFaceThinning(enlarged, settings.getThinningLevel());<br>        <br>        gpuProcessor.processFrame(thinned);<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> VideoFrame <span class="hljs-title function_">applySkinWhitening</span><span class="hljs-params">(VideoFrame frame, <span class="hljs-type">float</span> level)</span> &#123;<br>        <span class="hljs-comment">// 基于 YUV 颜色空间的皮肤检测和美白算法</span><br>        <span class="hljs-type">YUVFrame</span> <span class="hljs-variable">yuvFrame</span> <span class="hljs-operator">=</span> convertToYUV(frame);<br>        <span class="hljs-type">byte</span>[] whitened = yuvFrame.clone();<br>        applyWhiteningAlgorithm(whitened, level);<br>        <span class="hljs-keyword">return</span> convertFromYUV(whitened);<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<p><img src="/2025/12/19/multimedia/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/%E5%9F%BA%E7%A1%80%E5%89%AA%E8%BE%91.png" srcset="/img/loading.gif" lazyload alt="基础剪辑"><br><img src="/2025/12/19/multimedia/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/%E5%9F%BA%E7%A1%80%E7%BE%8E%E5%AE%B9.png" srcset="/img/loading.gif" lazyload alt="基础美容"></p>
+<h3 id="3-性能优化策略"><a href="#3-性能优化策略" class="headerlink" title="3. 性能优化策略"></a>3. 性能优化策略</h3><h4 id="内存管理"><a href="#内存管理" class="headerlink" title="内存管理"></a>内存管理</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">VideoFramePool</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Queue&lt;VideoFrame&gt; availableFrames = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>&lt;&gt;();<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">maxPoolSize</span> <span class="hljs-operator">=</span> <span class="hljs-number">30</span>;<br>    <br>    <span class="hljs-keyword">public</span> VideoFrame <span class="hljs-title function_">obtain</span><span class="hljs-params">(<span class="hljs-type">int</span> width, <span class="hljs-type">int</span> height)</span> &#123;<br>        <span class="hljs-keyword">synchronized</span> (availableFrames) &#123;<br>            <span class="hljs-type">VideoFrame</span> <span class="hljs-variable">frame</span> <span class="hljs-operator">=</span> availableFrames.poll();<br>            <span class="hljs-keyword">if</span> (frame == <span class="hljs-literal">null</span> || !isValidSize(frame, width, height)) &#123;<br>                frame = <span class="hljs-keyword">new</span> <span class="hljs-title class_">VideoFrame</span>(width, height);<br>            &#125;<br>            <span class="hljs-keyword">return</span> frame;<br>        &#125;<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">recycle</span><span class="hljs-params">(VideoFrame frame)</span> &#123;<br>        <span class="hljs-keyword">synchronized</span> (availableFrames) &#123;<br>            <span class="hljs-keyword"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">VideoFramePool</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> Queue&lt;VideoFrame&gt; availableFrames = <span class="hljs-keyword">new</span> <span class="hljs-title class_">LinkedList</span>&lt;&gt;();<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">maxPoolSize</span> <span class="hljs-operator">=</span> <span class="hljs-number">30</span>;<br>    <br>    <span class="hljs-keyword">public</span> VideoFrame <span class="hljs-title function_">obtain</span><span class="hljs-params">(<span class="hljs-type">int</span> width, <span class="hljs-type">int</span> height)</span> &#123;<br>        <span class="hljs-keyword">synchronized</span> (availableFrames) &#123;<br>            <span class="hljs-type">VideoFrame</span> <span class="hljs-variable">frame</span> <span class="hljs-operator">=</span> availableFrames.poll();<br>            <span class="hljs-keyword">if</span> (frame == <span class="hljs-literal">null</span> || !isValidSize(frame, width, height)) &#123;<br>                frame = <span class="hljs-keyword">new</span> <span class="hljs-title class_">VideoFrame</span>(width, height);<br>            &#125;<br>            <span class="hljs-keyword">return</span> frame;<br>        &#125;<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">recycle</span><span class="hljs-params">(VideoFrame frame)</span> &#123;<br>        <span class="hljs-keyword">synchronized</span> (availableFrames) &#123;<br>            <span class="hljs-keyword">if</span> (availableFrames.size() < maxPoolSize) &#123;<br>                availableFrames.offer(frame);<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h4 id="异步处理"><a href="#异步处理" class="headerlink" title="异步处理"></a>异步处理</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AsyncVideoProcessor</span> &#123;<br>    <span class="hljs-keyword">private</span> ExecutorService executor;<br>    <span class="hljs-keyword">private</span> Handler mainHandler;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">processVideoAsync</span><span class="hljs-params">(VideoData data, ProcessCallback callback)</span> &#123;<br>        executor.submit(() -&gt; &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-type">VideoFrame</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> processVideoSync(data);<br>                mainHandler.post(() -&gt; callback.onSuccess(result));<br>            &#125; <span class="hljs-keyword"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AsyncVideoProcessor</span> &#123;<br>    <span class="hljs-keyword">private</span> ExecutorService executor;<br>    <span class="hljs-keyword">private</span> Handler mainHandler;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">processVideoAsync</span><span class="hljs-params">(VideoData data, ProcessCallback callback)</span> &#123;<br>        executor.submit(() -&gt; &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-type">VideoFrame</span> <span class="hljs-variable">result</span> <span class="hljs-operator">=</span> processVideoSync(data);<br>                mainHandler.post(() -&gt; callback.onSuccess(result));<br>            &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                mainHandler.post(() -> callback.onError(e));<br>            &#125;<br>        &#125;);<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h2 id="核心代码"><a href="#核心代码" class="headerlink" title="核心代码"></a>核心代码</h2><h3 id="视频渲染引擎"><a href="#视频渲染引擎" class="headerlink" title="视频渲染引擎"></a>视频渲染引擎</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OpenGLRenderer</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">VERTEX_SHADER</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        #version 300 es</span><br><span class="hljs-string">        precision mediump float;</span><br><span class="hljs-string">        layout(location = 0) in vec2 position;</span><br><span class="hljs-string">        attribute vec4 a_color;</span><br><span class="hljs-string">        varying vec2 v_texCoord;</span><br><span class="hljs-string">        uniform sampler2D s_texture;</span><br><span class="hljs-string">        </span><br><span class="hljs-string">        void main() &#123;</span><br><span class="hljs-string">            vec4 color = texture2D(s_texture, v_texCoord);</span><br><span class="hljs-string">            gl_FragColor = vec4(color.rgb * color.a, color.a);</span><br><span class="hljs-string">        &#125;</span><br><span class="hljs-string">    &quot;&quot;&quot;</span>;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">FRAGMENT_SHADER</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        precision mediump float;</span><br><span class="hljs-string">        varying vec4 v_color;</span><br><span class="hljs-string">        </span><br><span class="hljs-string">        void main() &#123;</span><br><span class="hljs-string">            gl_FragColor = v_color;</span><br><span class="hljs-string">        &#125;</span><br><span class="hljs-string">    &quot;&quot;`;</span><br><span class="hljs-string">    </span><br><span class="hljs-string">    public void initShader() &#123;</span><br><span class="hljs-string">        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, VERTEX_SHADER);</span><br><span class="hljs-string">        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER);</span><br><span class="hljs-string">        </span><br><span class="hljs-string">        program = GLES20.glCreateProgram();</span><br><span class="hljs-string">        GLES20.glAttachShader(program, vertexShader);</span><br><span class="hljs-string">        GLES20.glAttachShader(program, fragmentShader);</span><br><span class="hljs-string">        GLES20.glLinkProgram(program);</span><br><span class="hljs-string">    &#125;</span><br><span class="hljs-string"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">OpenGLRenderer</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">VERTEX_SHADER</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        #version 300 es</span><br><span class="hljs-string">        precision mediump float;</span><br><span class="hljs-string">        layout(location = 0) in vec2 position;</span><br><span class="hljs-string">        attribute vec4 a_color;</span><br><span class="hljs-string">        varying vec2 v_texCoord;</span><br><span class="hljs-string">        uniform sampler2D s_texture;</span><br><span class="hljs-string">        </span><br><span class="hljs-string">        void main() &#123;</span><br><span class="hljs-string">            vec4 color = texture2D(s_texture, v_texCoord);</span><br><span class="hljs-string">            gl_FragColor = vec4(color.rgb * color.a, color.a);</span><br><span class="hljs-string">        &#125;</span><br><span class="hljs-string">    &quot;&quot;&quot;</span>;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">String</span> <span class="hljs-variable">FRAGMENT_SHADER</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        precision mediump float;</span><br><span class="hljs-string">        varying vec4 v_color;</span><br><span class="hljs-string">        </span><br><span class="hljs-string">        void main() &#123;</span><br><span class="hljs-string">            gl_FragColor = v_color;</span><br><span class="hljs-string">        &#125;</span><br><span class="hljs-string">    &quot;&quot;`;</span><br><span class="hljs-string">    </span><br><span class="hljs-string">    public void initShader() &#123;</span><br><span class="hljs-string">        int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, VERTEX_SHADER);</span><br><span class="hljs-string">        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, FRAGMENT_SHADER);</span><br><span class="hljs-string">        </span><br><span class="hljs-string">        program = GLES20.glCreateProgram();</span><br><span class="hljs-string">        GLES20.glAttachShader(program, vertexShader);</span><br><span class="hljs-string">        GLES20.glAttachShader(program, fragmentShader);</span><br><span class="hljs-string">        GLES20.glLinkProgram(program);</span><br><span class="hljs-string">    &#125;</span><br><span class="hljs-string">&#125;</span><br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h3 id="FFmpeg-集成"><a href="#FFmpeg-集成" class="headerlink" title="FFmpeg 集成"></a>FFmpeg 集成</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FFmpegBridge</span> &#123;<br>    <span class="hljs-keyword">static</span> &#123;<br>        System.loadLibrary(<span class="hljs-string">&quot;avcodec&quot;</span>);<br>        System.loadLibrary(<span class="hljs-string">&quot;avformat&quot;</span>);<br>        System.loadLibrary(<span class="hljs-string">&quot;avutil&quot;</span>);<br>        System.loadLibrary(<span class="hljs-string">&quot;swresample&quot;</span>);<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">extractVideoFrame</span><span class="hljs-params">(String videoPath, <span class="hljs-type">long</span> timeUs, <span class="hljs-type">byte</span>[] output)</span>;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">trimVideo</span><span class="hljs-params">(String inputPath, String outputPath, <span class="hljs-type">long</span> startTime, <span class="hljs-type">long</span> endTime)</span>;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">extractAudio</span><span class="hljs-params">(String videoPath, String outputPath)</span>;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyFilter</span><span class="hljs-params">(String inputPath, String filterName, <span class="hljs-type"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FFmpegBridge</span> &#123;<br>    <span class="hljs-keyword">static</span> &#123;<br>        System.loadLibrary(<span class="hljs-string">&quot;avcodec&quot;</span>);<br>        System.loadLibrary(<span class="hljs-string">&quot;avformat&quot;</span>);<br>        System.loadLibrary(<span class="hljs-string">&quot;avutil&quot;</span>);<br>        System.loadLibrary(<span class="hljs-string">&quot;swresample&quot;</span>);<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">extractVideoFrame</span><span class="hljs-params">(String videoPath, <span class="hljs-type">long</span> timeUs, <span class="hljs-type">byte</span>[] output)</span>;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">trimVideo</span><span class="hljs-params">(String inputPath, String outputPath, <span class="hljs-type">long</span> startTime, <span class="hljs-type">long</span> endTime)</span>;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">extractAudio</span><span class="hljs-params">(String videoPath, String outputPath)</span>;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">native</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">applyFilter</span><span class="hljs-params">(String inputPath, String filterName, <span class="hljs-type">float</span>[] parameters)</span>;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h2 id="常见坑与解决方案"><a href="#常见坑与解决方案" class="headerlink" title="常见坑与解决方案"></a>常见坑与解决方案</h2><h3 id="1-内存泄漏"><a href="#1-内存泄漏" class="headerlink" title="1. 内存泄漏"></a>1. 内存泄漏</h3><p><strong>问题</strong>：异步任务持有 Activity 引用导致内存泄漏</p>
+<p><strong>解决方案</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">VideoProcessingTask</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AsyncTask</span>&lt;VideoData, Void, ProcessedData&gt; &#123;<br>    <span class="hljs-keyword">private</span> WeakReference&lt;Context&gt; contextRef;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">VideoProcessingTask</span><span class="hljs-params">(Context context)</span> &#123;<br>        contextRef = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WeakReference</span>&lt;&gt;(context);<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> ProcessedData <span class="hljs-title function_">doInBackground</span><span class="hljs-params">(VideoData... params)</span> &#123;<br>        <span class="hljs-comment">// 使用弱引用避免内存泄漏</span><br>        <span class="hljs-type">Context</span> <span class="hljs-variable">context</span> <span class="hljs-operator">=</span> contextRef.get();<br>        <span class="hljs-keyword">if</span> (context == <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        <br>        <span class="hljs-keyword">return</span> processVideoData(params);<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onPostExecute</span><span class="hljs-params">(ProcessedData result)</span> &#123;<br>        <span class="hljs-type">Context</span> <span class="hljs-variable">context</span> <span class="hljs-operator">=</span> contextRef.get();<br>        <span class="hljs-keyword">if</span> (context != <span class="hljs-literal"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">VideoProcessingTask</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AsyncTask</span>&lt;VideoData, Void, ProcessedData&gt; &#123;<br>    <span class="hljs-keyword">private</span> WeakReference&lt;Context&gt; contextRef;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">VideoProcessingTask</span><span class="hljs-params">(Context context)</span> &#123;<br>        contextRef = <span class="hljs-keyword">new</span> <span class="hljs-title class_">WeakReference</span>&lt;&gt;(context);<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> ProcessedData <span class="hljs-title function_">doInBackground</span><span class="hljs-params">(VideoData... params)</span> &#123;<br>        <span class="hljs-comment">// 使用弱引用避免内存泄漏</span><br>        <span class="hljs-type">Context</span> <span class="hljs-variable">context</span> <span class="hljs-operator">=</span> contextRef.get();<br>        <span class="hljs-keyword">if</span> (context == <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>        <br>        <span class="hljs-keyword">return</span> processVideoData(params);<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">protected</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onPostExecute</span><span class="hljs-params">(ProcessedData result)</span> &#123;<br>        <span class="hljs-type">Context</span> <span class="hljs-variable">context</span> <span class="hljs-operator">=</span> contextRef.get();<br>        <span class="hljs-keyword">if</span> (context != <span class="hljs-literal">null</span>) &#123;<br>            updateUI(result);<br>        &#125;<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h3 id="2-ANR-错误"><a href="#2-ANR-错误" class="headerlink" title="2. ANR 错误"></a>2. ANR 错误</h3><p><strong>问题</strong>：主线程阻塞导致 ANR</p>
+<p><strong>解决方案</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SafeVideoProcessor</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">processVideoOnMainThread</span><span class="hljs-params">(VideoData data, ProcessCallback callback)</span> &#123;<br>        <span class="hljs-comment">// 确保在主线程执行</span><br>        <span class="hljs-keyword">if</span> (Looper.myLooper() == Looper.getMainLooper()) &#123;<br>            callback.onSuccess(processVideoSync(data));<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">new</span> <span class="hljs-title class_">Handler</span>(Looper.getMainLooper()).post(() -&gt; &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    callback.onSuccess(processVideoSync(data));<br>                &#125; <span class="hljs-keyword"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SafeVideoProcessor</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">processVideoOnMainThread</span><span class="hljs-params">(VideoData data, ProcessCallback callback)</span> &#123;<br>        <span class="hljs-comment">// 确保在主线程执行</span><br>        <span class="hljs-keyword">if</span> (Looper.myLooper() == Looper.getMainLooper()) &#123;<br>            callback.onSuccess(processVideoSync(data));<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">new</span> <span class="hljs-title class_">Handler</span>(Looper.getMainLooper()).post(() -&gt; &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    callback.onSuccess(processVideoSync(data));<br>                &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                    callback.onError(e);<br>                &#125;<br>            &#125;);<br>        &#125;<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h3 id="3-编码兼容性"><a href="#3-编码兼容性" class="headerlink" title="3. 编码兼容性"></a>3. 编码兼容性</h3><p><strong>问题</strong>：不同设备编码器支持性差异</p>
+<p><strong>解决方案</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MediaCodecUtils</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isCodecSupported</span><span class="hljs-params">(String mimeType)</span> &#123;<br>        <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.LOLLIPOP) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>        <br>        <span class="hljs-type">MediaCodecList</span> <span class="hljs-variable">codecs</span> <span class="hljs-operator">=</span> MediaCodecList.getCodecList();<br>        <span class="hljs-keyword">for</span> (MediaCodec codec : codecs) &#123;<br>            <span class="hljs-keyword">if</span> (codec.getName().contains(mimeType)) &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> MediaCodec <span class="hljs-title function_">getCompatibleCodec</span><span class="hljs-params">(String mimeType, MediaFormat format)</span> &#123;<br>        <span class="hljs-comment">// 获取兼容的编码器</span><br>        <span class="hljs-type">MediaCodecList</span> <span class="hljs-variable">codecs</span> <span class="hljs-operator">=</span> MediaCodecList.getCodecList();<br>        <span class="hljs-keyword">for</span> (MediaCodec codec : codecs) &#123;<br>            <span class="hljs-keyword">if</span> (codec.isEncoder()) &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    codec.configure(format, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, <span class="hljs-number">0</span>);<br>                    <span class="hljs-keyword">return</span> codec;<br>                &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                    Log.w(TAG, <span class="hljs-string">&quot;Codec configuration failed&quot;</span>, e);<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MediaCodecUtils</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isCodecSupported</span><span class="hljs-params">(String mimeType)</span> &#123;<br>        <span class="hljs-keyword">if</span> (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.LOLLIPOP) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>        <br>        <span class="hljs-type">MediaCodecList</span> <span class="hljs-variable">codecs</span> <span class="hljs-operator">=</span> MediaCodecList.getCodecList();<br>        <span class="hljs-keyword">for</span> (MediaCodec codec : codecs) &#123;<br>            <span class="hljs-keyword">if</span> (codec.getName().contains(mimeType)) &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> MediaCodec <span class="hljs-title function_">getCompatibleCodec</span><span class="hljs-params">(String mimeType, MediaFormat format)</span> &#123;<br>        <span class="hljs-comment">// 获取兼容的编码器</span><br>        <span class="hljs-type">MediaCodecList</span> <span class="hljs-variable">codecs</span> <span class="hljs-operator">=</span> MediaCodecList.getCodecList();<br>        <span class="hljs-keyword">for</span> (MediaCodec codec : codecs) &#123;<br>            <span class="hljs-keyword">if</span> (codec.isEncoder()) &#123;<br>                <span class="hljs-keyword">try</span> &#123;<br>                    codec.configure(format, <span class="hljs-literal">null</span>, <span class="hljs-literal">null</span>, <span class="hljs-number">0</span>);<br>                    <span class="hljs-keyword">return</span> codec;<br>                &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                    Log.w(TAG, <span class="hljs-string">&quot;Codec configuration failed&quot;</span>, e);<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IllegalArgumentException</span>(<span class="hljs-string">"No compatible codec found"</span>);<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h3 id="4-存储空间不足"><a href="#4-存储空间不足" class="headerlink" title="4. 存储空间不足"></a>4. 存储空间不足</h3><p><strong>问题</strong>：大文件处理时占用过多存储空间</p>
+<p><strong>解决方案</strong>：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StorageManager</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">long</span> <span class="hljs-variable">CACHE_SIZE</span> <span class="hljs-operator">=</span> <span class="hljs-number">100</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>; <span class="hljs-comment">// 100MB</span><br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">cacheVideoFrame</span><span class="hljs-params">(VideoFrame frame)</span> &#123;<br>        <span class="hljs-keyword">if</span> (getCacheSize() &gt; CACHE_SIZE) &#123;<br>            clearOldestCache();<br>        &#125;<br>        saveToCache(frame);<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">streamProcessVideo</span><span class="hljs-params">(String videoPath)</span> &#123;<br>        <span class="hljs-type">File</span> <span class="hljs-variable">tempFile</span> <span class="hljs-operator">=</span> getTempFile();<br>        <br>        <span class="hljs-comment">// 分块处理，避免内存溢出</span><br>        processVideoInChunks(videoPath, tempFile);<br>        <br>        <span class="hljs-comment"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">StorageManager</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">long</span> <span class="hljs-variable">CACHE_SIZE</span> <span class="hljs-operator">=</span> <span class="hljs-number">100</span> * <span class="hljs-number">1024</span> * <span class="hljs-number">1024</span>; <span class="hljs-comment">// 100MB</span><br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">cacheVideoFrame</span><span class="hljs-params">(VideoFrame frame)</span> &#123;<br>        <span class="hljs-keyword">if</span> (getCacheSize() &gt; CACHE_SIZE) &#123;<br>            clearOldestCache();<br>        &#125;<br>        saveToCache(frame);<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">streamProcessVideo</span><span class="hljs-params">(String videoPath)</span> &#123;<br>        <span class="hljs-type">File</span> <span class="hljs-variable">tempFile</span> <span class="hljs-operator">=</span> getTempFile();<br>        <br>        <span class="hljs-comment">// 分块处理，避免内存溢出</span><br>        processVideoInChunks(videoPath, tempFile);<br>        <br>        <span class="hljs-comment">// 处理完成后清理临时文件</span><br>        tempFile.delete();<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h2 id="可迁移经验"><a href="#可迁移经验" class="headerlink" title="可迁移经验"></a>可迁移经验</h2><h3 id="1-技术栈迁移"><a href="#1-技术栈迁移" class="headerlink" title="1. 技术栈迁移"></a>1. 技术栈迁移</h3><p><strong>从 MediaPlayer 到 ExoPlayer</strong></p>
+<ul>
+<li><strong>优势</strong>：更好的性能、更小的体积、硬件解码支持</li>
+<li><strong>迁移重点</strong>：播放器逻辑、数据源抽象</li>
+<li><strong>兼容性</strong>：保持旧版本支持的同时引入新特性</li>
+</ul>
+<h3 id="2-从-FFmpeg-到-MediaCodec-OpenGL"><a href="#2-从-FFmpeg-到-MediaCodec-OpenGL" class="headerlink" title="2. 从 FFmpeg 到 MediaCodec + OpenGL"></a>2. 从 FFmpeg 到 MediaCodec + OpenGL</h3><ul>
+<li><strong>优势</strong>：更好的电池续航、硬件加速、系统集成度</li>
+<li><strong>迁移重点</strong>：编码逻辑、渲染引擎</li>
+<li><strong>混合策略</strong>：复杂使用 FFmpeg，简单使用 MediaCodec</li>
+</ul>
+<h3 id="3-从同步到异步处理"><a href="#3-从同步到异步处理" class="headerlink" title="3. 从同步到异步处理"></a>3. 从同步到异步处理</h3><ul>
+<li><strong>优势</strong>：更好的用户体验、避免 ANR</li>
+<li><strong>迁移重点</strong>：数据流、状态管理、错误处理</li>
+<li><strong>设计模式</strong>：观察者模式、命令模式</li>
+</ul>
+<h3 id="4-从单线程到多线程"><a href="#4-从单线程到多线程" class="headerlink" title="4. 从单线程到多线程"></a>4. 从单线程到多线程</h3><ul>
+<li><strong>优势</strong>：充分利用多核处理器</li>
+<li><strong>挑战</strong>：线程安全、并发控制</li>
+<li><strong>解决方案</strong>：线程池、同步机制、不可变对象</li>
+</ul>
+<h2 id="未来展望"><a href="#未来展望" class="headerlink" title="未来展望"></a>未来展望</h2><h3 id="1-AI-驱动剪辑"><a href="#1-AI-驱动剪辑" class="headerlink" title="1. AI 驱动剪辑"></a>1. AI 驱动剪辑</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AIVideoProcessor</span> &#123;<br>    <span class="hljs-keyword">private</span> TensorFlowLite model;<br>    <br>    <span class="hljs-keyword">public</span> VideoFrame <span class="hljs-title function_">enhanceVideo</span><span class="hljs-params">(VideoFrame frame)</span> &#123;<br>        <span class="hljs-comment">// 智能增强：超分辨率、降噪、稳定化</span><br>        <span class="hljs-keyword">return</span> aiEnhanceFrame(frame);<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> VideoFrame <span class="hljs-title function_">aiEnhanceFrame</span><span class="hljs-params">(VideoFrame frame)</span> &#123;<br>        <span class="hljs-comment">// TensorFlow Lite 推理</span><br>        <span class="hljs-type">TensorBuffer</span> <span class="hljs-variable">input</span> <span class="hljs-operator">=</span> preprocessFrame(frame);<br>        <span class="hljs-type">TensorBuffer</span> <span class="hljs-variable">output</span> <span class="hljs-operator">=</span> model.run(input);<br>        <span class="hljs-keyword"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AIVideoProcessor</span> &#123;<br>    <span class="hljs-keyword">private</span> TensorFlowLite model;<br>    <br>    <span class="hljs-keyword">public</span> VideoFrame <span class="hljs-title function_">enhanceVideo</span><span class="hljs-params">(VideoFrame frame)</span> &#123;<br>        <span class="hljs-comment">// 智能增强：超分辨率、降噪、稳定化</span><br>        <span class="hljs-keyword">return</span> aiEnhanceFrame(frame);<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> VideoFrame <span class="hljs-title function_">aiEnhanceFrame</span><span class="hljs-params">(VideoFrame frame)</span> &#123;<br>        <span class="hljs-comment">// TensorFlow Lite 推理</span><br>        <span class="hljs-type">TensorBuffer</span> <span class="hljs-variable">input</span> <span class="hljs-operator">=</span> preprocessFrame(frame);<br>        <span class="hljs-type">TensorBuffer</span> <span class="hljs-variable">output</span> <span class="hljs-operator">=</span> model.run(input);<br>        <span class="hljs-keyword">return</span> postprocessFrame(frame, output);<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h3 id="2-实时协作编辑"><a href="#2-实时协作编辑" class="headerlink" title="2. 实时协作编辑"></a>2. 实时协作编辑</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RealtimeVideoEditor</span> &#123;<br>    <span class="hljs-keyword">private</span> WebSocketServer webSocketServer;<br>    <span class="hljs-keyword">private</span> SessionManager sessionManager;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">startCollaborativeEdit</span><span class="hljs-params">(String roomId)</span> &#123;<br>        sessionManager.createSession(roomId);<br>        webSocketServer.start();<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">handleRemoteEdit</span><span class="hljs-params">(EditOperation operation)</span> &#123;<br>        <span class="hljs-keyword">switch</span> (operation.getType()) &#123;<br>            <span class="hljs-keyword">case</span> ADD_TRACK:<br>                addTrack(operation.getTrack());<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> APPLY_FILTER:<br>                applyFilter(operation.getFilter());<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> SPLIT_TRACK:<br>                splitTrack(operation.getTrack(), operation.getTimeUs());<br>                <span class="hljs-keyword"><code class="language-hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">RealtimeVideoEditor</span> &#123;<br>    <span class="hljs-keyword">private</span> WebSocketServer webSocketServer;<br>    <span class="hljs-keyword">private</span> SessionManager sessionManager;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">startCollaborativeEdit</span><span class="hljs-params">(String roomId)</span> &#123;<br>        sessionManager.createSession(roomId);<br>        webSocketServer.start();<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">handleRemoteEdit</span><span class="hljs-params">(EditOperation operation)</span> &#123;<br>        <span class="hljs-keyword">switch</span> (operation.getType()) &#123;<br>            <span class="hljs-keyword">case</span> ADD_TRACK:<br>                addTrack(operation.getTrack());<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> APPLY_FILTER:<br>                applyFilter(operation.getFilter());<br>                <span class="hljs-keyword">break</span>;<br>            <span class="hljs-keyword">case</span> SPLIT_TRACK:<br>                splitTrack(operation.getTrack(), operation.getTimeUs());<br>                <span class="hljs-keyword">break</span>;<br>        &#125;<br>        broadcastOperation(operation);<br>    &#125;<br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>视频剪辑应用开发是一个复杂的系统工程，需要综合考虑：</p>
+<ul>
+<li><strong>架构设计</strong>：模块化、可扩展、易维护</li>
+<li><strong>性能优化</strong>：异步处理、内存管理、硬件加速</li>
+<li><strong>用户体验</strong>：响应式设计、流畅交互、错误处理</li>
+<li><strong>团队协作</strong>：标准化流程、版本控制、持续集成</li>
+</ul>
+<p>通过本文介绍的设计模式和实现方案，开发者可以构建出高性能、高质量的移动端视频剪辑应用。记住：<strong>好的架构是成功的基石，持续优化是卓越的关键</strong>。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/" class="category-chain-item">视频剪辑</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/Multimedia/" class="category-chain-item">Multimedia</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E8%A7%86%E9%A2%91%E5%89%AA%E8%BE%91/" class="print-no-link">#视频剪辑</a>
+      
+        <a href="/tags/Android/" class="print-no-link">#Android</a>
+      
+        <a href="/tags/OpenGL-ES/" class="print-no-link">#OpenGL ES</a>
+      
+        <a href="/tags/FFmpeg/" class="print-no-link">#FFmpeg</a>
+      
+        <a href="/tags/%E5%A4%9A%E5%AA%92%E4%BD%93%E5%A4%84%E7%90%86/" class="print-no-link">#多媒体处理</a>
+      
+    </div>
+  
+</div>
+
+
+              
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/12/18/android/Android-%E5%90%AF%E5%8A%A8%E4%BC%98%E5%8C%96%E5%85%A8%E6%B5%81%E7%A8%8B.html" title="Android 启动优化完整拆解">
+                        <span class="hidden-mobile">Android 启动优化完整拆解</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

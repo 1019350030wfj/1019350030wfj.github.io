@@ -1,0 +1,615 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Jayden">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="背景 &amp; 问题《Android群英传：神兵利器》是Android开发领域的经典书籍，介绍了Android开发过程中各种强大的工具和库。在阅读过程中，我记录了一些重要的知识点和实用工具，希望分享给大家。 结论先行（TL;DR）本书涵盖了Android开发工具链的方方面面，从开发环境搭建到性能分析，从版本控制到自动化构建，是每个Android开发者必备的工具参考书。 原理分析开发工具体系And">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android群英传 神兵利器笔记">
+<meta property="og:url" content="https://1019350030wfj.github.io/2016/12/22/android/Android%E7%BE%A4%E8%8B%B1%E4%BC%A0-%E7%A5%9E%E5%85%B5%E5%88%A9%E5%99%A8%E7%AC%94%E8%AE%B0.html">
+<meta property="og:site_name" content="Jayden 技术博客">
+<meta property="og:description" content="背景 &amp; 问题《Android群英传：神兵利器》是Android开发领域的经典书籍，介绍了Android开发过程中各种强大的工具和库。在阅读过程中，我记录了一些重要的知识点和实用工具，希望分享给大家。 结论先行（TL;DR）本书涵盖了Android开发工具链的方方面面，从开发环境搭建到性能分析，从版本控制到自动化构建，是每个Android开发者必备的工具参考书。 原理分析开发工具体系And">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-12-21T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-19T09:07:39.059Z">
+<meta property="article:author" content="Jayden">
+<meta property="article:tag" content="Android群英传">
+<meta property="article:tag" content="神兵利器">
+<meta property="article:tag" content="开发工具">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Android群英传 神兵利器笔记 - Jayden 技术博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"1019350030wfj.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":true,"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2,"placeholder":"/img/bg.png"},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="Jayden 技术博客" type="application/atom+xml">
+<link rel="stylesheet" href="/css/prism.css" type="text/css">
+<link rel="stylesheet" href="/css/prism-line-numbers.css" type="text/css"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Android群英传 神兵利器笔记"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2016-12-22 00:00" pubdate>
+          2016年12月22日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          893 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          8 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Android群英传 神兵利器笔记</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="背景-问题"><a href="#背景-问题" class="headerlink" title="背景 &amp; 问题"></a>背景 &amp; 问题</h2><p>《Android群英传：神兵利器》是Android开发领域的经典书籍，介绍了Android开发过程中各种强大的工具和库。在阅读过程中，我记录了一些重要的知识点和实用工具，希望分享给大家。</p>
+<h2 id="结论先行（TL-DR）"><a href="#结论先行（TL-DR）" class="headerlink" title="结论先行（TL;DR）"></a>结论先行（TL;DR）</h2><p>本书涵盖了Android开发工具链的方方面面，从开发环境搭建到性能分析，从版本控制到自动化构建，是每个Android开发者必备的工具参考书。</p>
+<h2 id="原理分析"><a href="#原理分析" class="headerlink" title="原理分析"></a>原理分析</h2><h3 id="开发工具体系"><a href="#开发工具体系" class="headerlink" title="开发工具体系"></a>开发工具体系</h3><p>Android开发工具可以分为以下几个层次：</p>
+<ol>
+<li><strong>IDE层</strong>：Android Studio、IntelliJ IDEA</li>
+<li><strong>构建工具层</strong>：Gradle、Maven</li>
+<li><strong>调试工具层</strong>：ADB、DDMS、Memory Profiler</li>
+<li><strong>测试工具层</strong>：JUnit、Espresso、Robolectric</li>
+<li><strong>性能分析层</strong>：Systrace、Traceview、GPU Profiler</li>
+</ol>
+<h3 id="工具选择原则"><a href="#工具选择原则" class="headerlink" title="工具选择原则"></a>工具选择原则</h3><p>选择合适的开发工具需要考虑以下因素：</p>
+<ul>
+<li><strong>项目规模</strong>：大型项目需要更强的构建工具</li>
+<li><strong>团队协作</strong>：考虑工具的协作特性</li>
+<li><strong>性能要求</strong>：性能分析工具的精确度</li>
+<li><strong>学习成本</strong>：工具的学习曲线</li>
+</ul>
+<h2 id="实现方案"><a href="#实现方案" class="headerlink" title="实现方案"></a>实现方案</h2><h3 id="推荐工具配置"><a href="#推荐工具配置" class="headerlink" title="推荐工具配置"></a>推荐工具配置</h3><h4 id="开发环境配置"><a href="#开发环境配置" class="headerlink" title="开发环境配置"></a>开发环境配置</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs bash"><span class="hljs-comment"># 安装Android Studio</span><br>wget https://dl.google.com/dl/android/studio/ide-zips/3.5.3.0/android-studio-ide-191.6010548-linux.tar.gz<br><br><span class="hljs-comment"><code class="language-hljs bash"><span class="hljs-comment"># 安装Android Studio</span><br>wget https://dl.google.com/dl/android/studio/ide-zips/3.5.3.0/android-studio-ide-191.6010548-linux.tar.gz<br><br><span class="hljs-comment"># 配置Gradle</span><br>distributionBase=GRADLE_USER_HOME<br>distributionPath=wrapper/dists<br>distributionUrl=https\://services.gradle.org/distributions/gradle-5.4.1-all.zip<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h4 id="性能分析工具使用"><a href="#性能分析工具使用" class="headerlink" title="性能分析工具使用"></a>性能分析工具使用</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs bash"><span class="hljs-comment"># 使用Systrace进行性能分析</span><br>python <span class="hljs-variable">$ANDROID_HOME</span>/platform-tools/systrace/systrace.py -t 10 -o trace.html gfx view wm am input<br><br><span class="hljs-comment"><code class="language-hljs bash"><span class="hljs-comment"># 使用Systrace进行性能分析</span><br>python <span class="hljs-variable">$ANDROID_HOME</span>/platform-tools/systrace/systrace.py -t 10 -o trace.html gfx view wm am input<br><br><span class="hljs-comment"># 使用ADB命令查看内存使用</span><br>adb shell dumpsys meminfo com.example.app<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h2 id="核心代码"><a href="#核心代码" class="headerlink" title="核心代码"></a>核心代码</h2><h4 id="Gradle构建脚本优化"><a href="#Gradle构建脚本优化" class="headerlink" title="Gradle构建脚本优化"></a>Gradle构建脚本优化</h4><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs groovy">android &#123;<br>    compileSdkVersion <span class="hljs-number">29</span><br>    buildToolsVersion <span class="hljs-string">&quot;29.0.2&quot;</span><br>    <br>    defaultConfig &#123;<br>        applicationId <span class="hljs-string">&quot;com.example.app&quot;</span><br>        minSdkVersion <span class="hljs-number">21</span><br>        targetSdkVersion <span class="hljs-number">29</span><br>        versionCode <span class="hljs-number">1</span><br>        versionName <span class="hljs-string">&quot;1.0&quot;</span><br>        <br>        <span class="hljs-comment">// 启用多dex支持</span><br>        multiDexEnabled <span class="hljs-literal">true</span><br>    &#125;<br>    <br>    buildTypes &#123;<br>        release &#123;<br>            minifyEnabled <span class="hljs-literal">true</span><br>            proguardFiles getDefaultProguardFile(<span class="hljs-string">&#x27;proguard-android.txt&#x27;</span>), <span class="hljs-string">&#x27;proguard-rules.pro&#x27;</span><br>        &#125;<br>    &#125;<br>    <br>    <span class="hljs-comment">// 编译优化</span><br>    compileOptions &#123;<br>        sourceCompatibility JavaVersion.VERSION_1_8<br>        targetCompatibility JavaVersion.VERSION_1_8<br>    &#125;<br>&#125;<br><br>dependencies &#123;<br>    implementation <span class="hljs-string">&#x27;androidx.appcompat:appcompat:1.1.0&#x27;</span><br>    implementation <span class="hljs-string">&#x27;com.google.android.material:material:1.0.0&#x27;</span><br>    <br>    <span class="hljs-comment">// 性能优化库</span><br>    implementation <span class="hljs-string"><code class="language-hljs groovy">android &#123;<br>    compileSdkVersion <span class="hljs-number">29</span><br>    buildToolsVersion <span class="hljs-string">&quot;29.0.2&quot;</span><br>    <br>    defaultConfig &#123;<br>        applicationId <span class="hljs-string">&quot;com.example.app&quot;</span><br>        minSdkVersion <span class="hljs-number">21</span><br>        targetSdkVersion <span class="hljs-number">29</span><br>        versionCode <span class="hljs-number">1</span><br>        versionName <span class="hljs-string">&quot;1.0&quot;</span><br>        <br>        <span class="hljs-comment">// 启用多dex支持</span><br>        multiDexEnabled <span class="hljs-literal">true</span><br>    &#125;<br>    <br>    buildTypes &#123;<br>        release &#123;<br>            minifyEnabled <span class="hljs-literal">true</span><br>            proguardFiles getDefaultProguardFile(<span class="hljs-string">&#x27;proguard-android.txt&#x27;</span>), <span class="hljs-string">&#x27;proguard-rules.pro&#x27;</span><br>        &#125;<br>    &#125;<br>    <br>    <span class="hljs-comment">// 编译优化</span><br>    compileOptions &#123;<br>        sourceCompatibility JavaVersion.VERSION_1_8<br>        targetCompatibility JavaVersion.VERSION_1_8<br>    &#125;<br>&#125;<br><br>dependencies &#123;<br>    implementation <span class="hljs-string">&#x27;androidx.appcompat:appcompat:1.1.0&#x27;</span><br>    implementation <span class="hljs-string">&#x27;com.google.android.material:material:1.0.0&#x27;</span><br>    <br>    <span class="hljs-comment">// 性能优化库</span><br>    implementation <span class="hljs-string">&#x27;com.facebook.stetho:stetho:1.5.1&#x27;</span><br>&#125;<br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h2 id="常见坑"><a href="#常见坑" class="headerlink" title="常见坑"></a>常见坑</h2><h3 id="1-Gradle构建缓慢"><a href="#1-Gradle构建缓慢" class="headerlink" title="1. Gradle构建缓慢"></a>1. Gradle构建缓慢</h3><p><strong>问题</strong>：Gradle构建过程很慢，影响开发效率。</p>
+<p><strong>解决方案</strong>：</p>
+<ul>
+<li>配置Gradle守护进程</li>
+<li>使用本地Gradle缓存</li>
+<li>启用并行构建</li>
+</ul>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre class="line-numbers language-hljs bash"><span class="hljs-comment"># gradle.properties</span><br>org.gradle.daemon=<span class="hljs-literal">true</span><br>org.gradle.parallel=<span class="hljs-literal">true</span><br>org.gradle.configureondemand=<span class="hljs-literal"><code class="language-hljs bash"><span class="hljs-comment"># gradle.properties</span><br>org.gradle.daemon=<span class="hljs-literal">true</span><br>org.gradle.parallel=<span class="hljs-literal">true</span><br>org.gradle.configureondemand=<span class="hljs-literal">true</span><br><span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></td></tr></table></figure>
+
+<h3 id="2-内存分析不准确"><a href="#2-内存分析不准确" class="headerlink" title="2. 内存分析不准确"></a>2. 内存分析不准确</h3><p><strong>问题</strong>：使用内存分析工具时得到的数据不准确。</p>
+<p><strong>解决方案</strong>：</p>
+<ul>
+<li>多次测量取平均值</li>
+<li>结合代码分析</li>
+<li>使用多个工具交叉验证</li>
+</ul>
+<h2 id="可迁移经验"><a href="#可迁移经验" class="headerlink" title="可迁移经验"></a>可迁移经验</h2><ol>
+<li><strong>工具链集成</strong>：将各种工具集成到开发流程中，形成完整的工具链</li>
+<li><strong>自动化意识</strong>：尽可能自动化重复性的工作</li>
+<li><strong>性能监控</strong>：建立性能监控体系，及时发现和解决问题</li>
+<li><strong>文档记录</strong>：重要工具的使用要记录文档，便于团队共享</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>掌握强大的开发工具是提升开发效率的关键。《Android群英传：神兵利器》为我们提供了工具选择的指南，但更重要的是要根据项目实际情况选择合适的工具组合。</p>
+<blockquote>
+<p>工欲善其事，必先利其器。选择合适的工具，事半功倍。</p>
+</blockquote>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Android/" class="category-chain-item">Android</a>
+  
+  
+    <span>></span>
+    
+  <a href="/categories/Android/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" class="category-chain-item">读书笔记</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Android%E7%BE%A4%E8%8B%B1%E4%BC%A0/" class="print-no-link">#Android群英传</a>
+      
+        <a href="/tags/%E7%A5%9E%E5%85%B5%E5%88%A9%E5%99%A8/" class="print-no-link">#神兵利器</a>
+      
+        <a href="/tags/%E5%BC%80%E5%8F%91%E5%B7%A5%E5%85%B7/" class="print-no-link">#开发工具</a>
+      
+    </div>
+  
+</div>
+
+
+              
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/12/18/architecture/%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F.html" title="设计模式 - 软件架构的核心原则与实践">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">设计模式 - 软件架构的核心原则与实践</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2016/12/14/engineering/Hello-World-%E6%88%91%E7%9A%84%E6%8A%80%E6%9C%AF%E5%8D%9A%E5%AE%A2%E4%B9%8B%E6%97%85.html" title="Hello World - 我的技术博客之旅">
+                        <span class="hidden-mobile">Hello World - 我的技术博客之旅</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
